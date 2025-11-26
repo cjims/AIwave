@@ -32,7 +32,7 @@
 
 ## 系統架構
 <p align="center">
-<img src="https://github.com/cjims/AIwave/blob/main/pic/Framework1.png" width="720"> 
+  <img src="https://raw.githubusercontent.com/cjims/AIwave/main/pic/Framework1.png" width="720">
 </p>
 
 系統主要分為四個模組：
