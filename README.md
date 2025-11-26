@@ -7,7 +7,8 @@
 因部屬在雲端，因此當中會分成好幾個部分: Lambda、Fronted、Knowledge_base、生成影像程式。
 
 ## Architecture
-![images]()
+![images](https://github.com/cjims/AIwave/blob/main/pic/Framework1.png)
+![images](https://github.com/cjims/AIwave/blob/main/pic/Framework2.png)
 環境做法 : <br>
 
 先校正WSL2驅動，接著再安裝usbipd，最後接上XLaunch，進行錄影畫面的顯示，有可能會因為網路有一些小延遲，按下確認後須注意。
@@ -51,8 +52,4 @@ v4l2-ctl -d /dev/video0 --list-formats-ext
 ```
 python3 main.py
 ```
-
-## 使用範例
-
-https://github.com/user-attachments/assets/4843eaeb-3589-409e-93f1-7615f4095022
 
