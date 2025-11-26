@@ -5,17 +5,16 @@ import os
 s3 = boto3.client('s3')
 bucket_name = "testviedo"
 
+# 列出S3裡的圖片，產生presigned URL
 def lambda_handler(event, context):
-    # 取得 bucket 裡所有物件
     response = s3.list_objects_v2(Bucket=bucket_name)
 
     images = []
     
     for obj in response.get('Contents', []):
         key = obj['Key']
-        # 如果是圖片檔
         if key.endswith((".png", ".jpg", ".jpeg", ".gif")):
-            # 產生一個 presigned URL
+            # 產生presigned URL
             presigned_url = s3.generate_presigned_url('get_object',
                                                       Params={'Bucket': bucket_name, 'Key': key},
                                                       ExpiresIn=3600)
