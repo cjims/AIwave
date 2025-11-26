@@ -1,55 +1,108 @@
-# 2025雲湧智生:AI黑客松
+# 🏠 智慧 AI 看房系統  
+### 2025 雲湧智生：AI 黑客松（DIGITIMES）
 
-## Abstract
+本專案為參與 **DIGITIMES 主辦之「2025 雲湧智生：AI 黑客松」競賽成果**，  
+結合 **研華（Advantech）ICAM-540 工業級攝影機** 與 **AWS 生成式 AI 服務**，  
+打造一套可將實際看屋影像 **即時轉換為多種室內設計風格** 的智慧 AI 看房體驗。
 
-此專案為參與由DIGITIMES主辦的競賽，競賽內容為雲端基礎設施的生成式AI服務(AWS服務)，並透過培訓工作坊，協助參賽團隊建構**多代理協作(Multi-agent collaboration)**、**多模態AI模型(Multi-modal AI Models)**、**具備推理能力的大型語言模型 (Reasoning LLM)**等技術，期望參賽者在完善且擁有安全架構及數據資料的開發環境中，提出創新應用與打造現場展示成果。
+---
 
-因部屬在雲端，因此當中會分成好幾個部分: Lambda、Fronted、Knowledge_base、生成影像程式。
+## 專案簡介
 
-## Architecture
-![images](https://github.com/cjims/AIwave/blob/main/pic/Framework1.png)
-![images](https://github.com/cjims/AIwave/blob/main/pic/Framework2.png)
-環境做法 : <br>
+傳統線上看屋多半僅提供靜態影像或即時影像串流，使用者難以想像未來居住情境。
 
-先校正WSL2驅動，接著再安裝usbipd，最後接上XLaunch，進行錄影畫面的顯示，有可能會因為網路有一些小延遲，按下確認後須注意。
+本專案透過：
+-  **ICAM-540 即時影像串流**
+-  **AWS 雲端原生架構**
+-  **生成式 AI 室內風格轉換（Nova）**
+-  **Knowledge Base + RAG 搜尋**
 
-程式流程 : <br>
+讓使用者能夠直觀地看到「同一空間的不同風格樣貌」，提升看屋與決策體驗。
 
-程式啟動，對準人臉後，按下enter進行截圖，圖片會存到face_id的資料夾中，抓取到的特徵點會存到DB進去，最後再傳回程式辨識是誰。
-如果想重複寫入，需要重新再按下enter確認，名字打的跟之前的一樣，DB的特徵就會被覆蓋過去。
+---
 
-</details>
+## 技術亮點
 
-## Getting started(windows)
-1. 確保[環境](https://blog.csdn.net/qq_40087136/article/details/145190221)已經都OK
-2. 在使用XLanch時，需注意WSL環境是否有設定lanch的環境IP變數
-3. `usb IP.txt`可以參考
-4. install.sh已經幫你建好虛擬環境以及所需套件，必要時也可以參考`requirements.txt`
+- **Multi-Modal AI**：結合影像 + 文字的生成式模型應用  
+- **Reasoning LLM**：透過 Knowledge Base 提供語意理解與查詢  
+- **Cloud-Native 架構**：Lambda + S3 + Bedrock  
+- 即時影像到生成內容的串接流程
 
-### Install
+---
+
+## 系統架構
+<p align="center">
+<img src="https://github.com/cjims/AIwave/blob/main/pic/Framework1.png" width="720">
+</p>
+
+系統主要分為四個模組：
+
+| 模組 | 說明 |
+|----|----|
+| AWS Lambda | 影像處理、串流轉檔、S3 存取 |
+| Knowledge Base | 建立 RAG 搜尋與 API |
+| Generative AI | Nova 模型進行室內風格轉換 |
+| Frontend | 使用者操作與成果展示 |
+
+---
+
+## AWS Lambda
+
+### 環境需求
+- 需安裝 **FFmpeg**
+
+### 功能檔案
+
+| 檔案名稱 | 功能 |
+|--------|------|
+| `myLambdaFunction.py` | 將 Kinesis Video Stream 影像即時串流並儲存至 S3 |
+| `getPictures.py` | 列出 S3 中的圖片供前端取得 |
+| `getNovaGenPictures.py` | 產生已生成影像 / 影片的存取連結 |
+
+---
+
+## Knowledge Base（RAG）
+
+將 S3 內的資料建立為 Knowledge Base，並透過 **Bedrock Agent API** 提供給前端查詢。
+
+```bash
+python data_automation.py
 ```
-chmod +x install.sh
-./install.sh
+
+## Nova生成模組（Nova-Gen）
+
+本專案使用 AWS Bedrock Nova 系列模型 進行影像生成與風格轉換。
+
+1. 各nova_*.py對應不同模型
+2. 不同模型帶入的參數與生成風格不同
+3. 可擴充更多室內設計風格主題
+
+## Frontend
+
+```bash
+python3 -m http.server 8080
 ```
 
-## Getting started(Linux)
+點開index.html
 
-### Install
-```
-chmod +x install.sh
-./install.sh
-```
+<p align="center">
+<img src="https://github.com/cjims/AIwave/blob/main/pic/front1.png" width="600">
+</p>
 
-## DB
-部門是利用Postgresql，資料庫參數的調整在`db_config.env`
+<p align="center">
+<img src="https://github.com/cjims/AIwave/blob/main/pic/front2.png" width="600">
+</p>
 
-## 啟動
-要先安裝`v4l2-ctl`，查看USB cam能夠支援到裝置的何種解析度，視情況將相對應的數值填入程式中
-```
-v4l2-ctl -d /dev/video0 --list-formats-ext
-```
-主要辨識程式在`get_cam_name.py`，參數調整在`main.py`
-```
-python3 main.py
-```
+## Demo
 
+<p align="center">原始影像</p>
+
+<p align="center">
+<img src="https://github.com/cjims/AIwave/blob/main/pic/521793.jpg" width="500", >
+</p>
+
+<p align="center">AI 生成：現代極簡風青年旅宿</p>
+
+<p align="center">
+<img src="https://github.com/cjims/AIwave/blob/main/pic/521793_designed.jpg" width="500">
+</p>

@@ -3,7 +3,7 @@ import os
 
 s3_client = boto3.client('s3')
 
-
+# 前端連接影片的URL
 def lambda_handler(event, context):
     bucket_name = 'testviedo-gen'
     key = event['queryStringParameters']['key']
